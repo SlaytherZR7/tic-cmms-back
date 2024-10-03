@@ -22,9 +22,15 @@ export class AuthController {
     return this.authService.login(loginUserDto, res);
   }
 
+  @Post('logout')
+  @Auth()
+  logout(@Res() res: Response) {
+    return this.authService.logout(res);
+  }
+
   @Get('check-status')
   @Auth()
-  checkAuthStatus(@GetUser() user: User) {
-    return this.authService.checkAuthStatus(user);
+  checkAuthStatus(@GetUser() user: User, @Res() res: Response) {
+    return this.authService.checkAuthStatus(user, res);
   }
 }

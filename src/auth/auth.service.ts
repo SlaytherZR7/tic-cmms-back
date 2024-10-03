@@ -73,10 +73,20 @@ export class AuthService {
       .send({ ...user, token });
   }
 
-  async checkAuthStatus(user: User) {
+  async logout(@Res() res: Response) {
+    res.clearCookie('session').send();
+  }
+
+  async checkAuthStatus(user: User, @Res() res: Response) {
     const token = this.getJwtToken({ id: user.id });
 
-    return { ...user, token };
+    res
+      .cookie('session', token, {
+        httpOnly: true,
+        secure: false, // True in production
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
+      })
+      .send({ ...user, token });
   }
 
   private getJwtToken(payload: JwtPayload) {
